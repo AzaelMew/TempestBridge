@@ -22,6 +22,15 @@ It is a Fabric port of the original ChatTriggers module. External integrations f
   - `/bridgeunignore <ign>`
 - STuF-style URL encode/decode support for bridge-safe links.
 - Settings screen through Mod Menu + Cloth Config.
+- Configurable bridge account usernames, so the formatter can be pointed at other bridge bots instead of only the default Tempest bot accounts.
+- Configurable display formatting for bridge chat:
+  - message author color
+  - bridge tag text, for example `[DISCORD]`
+  - bridge tag color
+  - guild-rank tag color
+  - SkyBlock event/stat colors
+  - SkyBlock command output symbol/text/value colors
+  - optional ping-name highlight
 - Debug logging toggle for troubleshooting live chat matching:
   - `/tempestdebug`
 
@@ -82,6 +91,24 @@ official == intermediary == named
 ```
 
 ## Configuration
+
+Open the settings screen with `/tempest`, or through Mod Menu if it is installed.
+
+The most important setting for using this mod with other bridge bots is:
+
+```text
+Bridge Account Usernames
+```
+
+Set this to a comma-separated list of Minecraft usernames that should be treated as bridge accounts, for example:
+
+```text
+MrTheAFK, lfForagingUpdate, SomeOtherBridgeBot
+```
+
+When a chat line is sent by one of these accounts, TempestBridge will apply the same bridge formatting/parsing rules to it. This lets the mod work with renamed/replaced bridge bot accounts without rebuilding the mod.
+
+The settings screen also lets you change the visible bridge formatting, including the displayed bridge tag text (`DISCORD` by default), tag colors, author colors, guild-rank tag colors, event colors, command output colors, and the optional ping-name highlight.
 
 The config is saved as:
 
