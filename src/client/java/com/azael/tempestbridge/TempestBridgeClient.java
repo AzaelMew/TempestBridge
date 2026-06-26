@@ -81,7 +81,7 @@ public class TempestBridgeClient implements ClientModInitializer {
             ClientCommands.literal("tempest")
                 .executes(ctx -> {
                     Minecraft client = Minecraft.getInstance();
-                    client.execute(() -> client.gui.setScreen(TempestBridgeConfigScreen.create(client.gui.screen())));
+                    client.execute(() -> client.setScreen(TempestBridgeConfigScreen.create(client.screen)));
                     return 1;
                 })
         ));
@@ -331,7 +331,7 @@ public class TempestBridgeClient implements ClientModInitializer {
     private static void chat(String text) {
         Minecraft client = Minecraft.getInstance();
         client.execute(() -> {
-            if (client.gui != null && client.gui.hud != null) client.gui.hud.getChat().addClientSystemMessage(LegacyText.toComponent(text));
+            if (client.gui != null) client.gui.getChat().addClientSystemMessage(LegacyText.toComponent(text));
         });
     }
 

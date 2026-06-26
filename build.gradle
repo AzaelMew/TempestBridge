@@ -29,11 +29,11 @@ loom {
 
 dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
-    // Minecraft 26.2 is distributed unobfuscated and Yarn is discontinued for 26.1+.
+    // Minecraft 26.1.2 is distributed unobfuscated and Yarn is discontinued for 26.1+.
     // The normal Loom officialMojangMappings() path expects mapping downloads that Mojang's
     // 26.x manifest no longer exposes, so this jar is an identity Tiny mapping built from
     // the unobfuscated client/common jars: official == intermediary == named.
-    mappings files("gradle/mappings/identity-mappings-26.2.jar")
+    mappings files("gradle/mappings/identity-mappings-26.1.2.jar")
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
     modImplementation "maven.modrinth:modmenu:${project.modmenu_version}"
@@ -48,12 +48,12 @@ processResources {
 }
 
 tasks.withType(JavaCompile).configureEach {
-    // Minecraft 26.2 requires Java 25; compile the mod to the same target.
+    // Minecraft 26.1.2 requires Java 25; compile the mod to the same target.
     it.options.release = 25
 }
 
 java {
-    // Minecraft 26.2 is distributed unobfuscated; Yarn is discontinued for 26.1+.
+    // Minecraft 26.1.2 is distributed unobfuscated; Yarn is discontinued for 26.1+.
     // Keep Java sources in Mojang official names and do not publish/remap a sources jar
     // until Fabric Loom exposes a first-class no-remap official-mappings path for these releases.
     sourceCompatibility = JavaVersion.VERSION_25
