@@ -2,7 +2,7 @@ package com.azael.tempestbridge;
 
 import com.mojang.brigadier.arguments.StringArgumentType;
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.command.v2.ClientCommands;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.fabricmc.fabric.api.client.message.v1.ClientSendMessageEvents;
@@ -78,7 +78,7 @@ public class TempestBridgeClient implements ClientModInitializer {
 
     private void registerCommands() {
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> dispatcher.register(
-            ClientCommands.literal("tempest")
+            ClientCommandManager.literal("tempest")
                 .executes(ctx -> {
                     Minecraft client = Minecraft.getInstance();
                     client.execute(() -> client.setScreen(TempestBridgeConfigScreen.create(client.screen)));
@@ -87,8 +87,8 @@ public class TempestBridgeClient implements ClientModInitializer {
         ));
 
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> dispatcher.register(
-            ClientCommands.literal("bridgeignore")
-                .then(ClientCommands.argument("ign", StringArgumentType.greedyString())
+            ClientCommandManager.literal("bridgeignore")
+                .then(ClientCommandManager.argument("ign", StringArgumentType.greedyString())
                     .executes(ctx -> {
                         String ign = StringArgumentType.getString(ctx, "ign").trim();
                         if (!ign.isEmpty() && CONFIG.ignores.stream().noneMatch(s -> s != null && s.equalsIgnoreCase(ign))) {
@@ -101,8 +101,8 @@ public class TempestBridgeClient implements ClientModInitializer {
         ));
 
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> dispatcher.register(
-            ClientCommands.literal("bridgeunignore")
-                .then(ClientCommands.argument("ign", StringArgumentType.greedyString())
+            ClientCommandManager.literal("bridgeunignore")
+                .then(ClientCommandManager.argument("ign", StringArgumentType.greedyString())
                     .executes(ctx -> {
                         String ign = StringArgumentType.getString(ctx, "ign").trim();
                         CONFIG.ignores.removeIf(s -> s != null && s.equalsIgnoreCase(ign));
@@ -113,7 +113,7 @@ public class TempestBridgeClient implements ClientModInitializer {
         ));
 
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> dispatcher.register(
-            ClientCommands.literal("tempestdebug")
+            ClientCommandManager.literal("tempestdebug")
                 .executes(ctx -> {
                     CONFIG.debugLogging = !CONFIG.debugLogging;
                     CONFIG.save();
@@ -373,7 +373,7 @@ public class TempestBridgeClient implements ClientModInitializer {
     private static void chat(String text) {
         Minecraft client = Minecraft.getInstance();
         client.execute(() -> {
-            if (client.gui != null) client.gui.getChat().addClientSystemMessage(LegacyText.toComponent(text));
+            if (client.gui != null) client.gui.getChat().addMessage(LegacyText.toComponent(text));
         });
     }
 
