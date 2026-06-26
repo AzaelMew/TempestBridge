@@ -73,7 +73,7 @@ gradle build
 The built mod jar is produced at:
 
 ```text
-build/libs/tempestbridge-1.0.1.jar
+build/libs/tempestbridge-1.0.2.jar
 ```
 
 ## Notes on Minecraft 26.1.2 mappings
