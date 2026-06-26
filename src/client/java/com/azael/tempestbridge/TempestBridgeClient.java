@@ -13,7 +13,6 @@ import net.minecraft.sounds.SoundEvents;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -25,8 +24,8 @@ public class TempestBridgeClient implements ClientModInitializer {
     static final String[] COLORS = {"§0", "§1", "§2", "§3", "§4", "§5", "§6", "§7", "§8", "§9", "§a", "§b", "§c", "§d", "§e", "§f"};
     static final String[] COLOR_NAMES = {"§0Black", "§1Dark Blue", "§2Dark Green", "§3Dark Aqua", "§4Dark Red", "§5Dark Purple", "§6Gold", "§7Gray", "§8Dark Gray", "§9Blue", "§aGreen", "§bAqua", "§cRed", "§dPink", "§eYellow", "§fWhite"};
     static final String[] SYMBOLS = {"-", "*", "‣", "►", "➣", "➢", "❥", "✯", "➤", "➺"};
-    static final List<String> ACCOUNTS = List.of("TempestBridge", "MrTheAFK", "lfForagingUpdate", "[VIP] TempestBridge [Elder]", "[VIP] lfForagingUpdate [Elder]", "MrTheAFK [Elder]");
 
+    private static final Pattern BRIDGE_ACCOUNT_PREFIX = Pattern.compile("^(?:Guild|Officer) > ((?:\\[[^\\]]+] )?([A-Za-z0-9_]{1,16}) \\[[^\\]]+]):");
     private static final Pattern GUILD_JOIN_LEAVE = Pattern.compile("(§2Guild >§[A-Za-z0-9_] )([A-Za-z0-9_]{2,16} )(left\\.|joined\\.)");
     private static final Pattern STAT_PAIR = Pattern.compile("([\\w ]+): ([\\d\\-,$]+)");
     private static final Pattern CATA_PAIR = Pattern.compile("([\\w ]+): ([\\d\\-,.$]+)");
@@ -302,10 +301,23 @@ public class TempestBridgeClient implements ClientModInitializer {
     }
 
     private static String findAccount(String msg) {
-        for (String account : ACCOUNTS) {
-            if (msg.contains("Guild > " + account + ":") || msg.contains("Officer > " + account + ":")) return account;
+        Matcher matcher = BRIDGE_ACCOUNT_PREFIX.matcher(msg);
+        if (!matcher.find()) return null;
+
+        String account = matcher.group(1);
+        String username = matcher.group(2);
+        if (CONFIG.bridgeAccounts == null) return null;
+        for (String configured : CONFIG.bridgeAccounts) {
+            if (username.equalsIgnoreCase(normalizeConfiguredUsername(configured))) return account;
         }
         return null;
+    }
+
+    private static String normalizeConfiguredUsername(String configured) {
+        String value = configured.trim();
+        Matcher formatted = Pattern.compile("^(?:\\[[^\\]]+] )?([A-Za-z0-9_]{1,16})(?: \\[[^\\]]+])?$").matcher(value);
+        if (formatted.matches()) return formatted.group(1);
+        return value;
     }
 
     private static String stripCurl(String input) {

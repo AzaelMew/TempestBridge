@@ -6,6 +6,8 @@ import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
+import java.util.ArrayList;
+import java.util.List;
 
 
 public final class TempestBridgeConfigScreen {
@@ -51,6 +53,11 @@ public final class TempestBridgeConfigScreen {
         general.addEntry(entry.startBooleanToggle(Component.literal("Show Discord Messages"), config.discordToggle)
             .setDefaultValue(true)
             .setSaveConsumer(value -> config.discordToggle = value)
+            .build());
+        general.addEntry(entry.startStrField(Component.literal("Bridge Account Usernames"), joinNames(config.bridgeAccounts))
+            .setDefaultValue("MrTheAFK, lfForagingUpdate")
+            .setTooltip(Component.literal("Comma-separated Minecraft usernames to treat as bridge accounts. Rank and guild rank are detected from chat automatically."))
+            .setSaveConsumer(value -> config.bridgeAccounts = splitNames(value))
             .build());
         general.addEntry(entry.startBooleanToggle(Component.literal("Debug Logging"), config.debugLogging)
             .setDefaultValue(false)
@@ -101,5 +108,23 @@ public final class TempestBridgeConfigScreen {
             if (values[i].equals(value)) return i;
         }
         return 0;
+    }
+
+    private static String joinNames(List<String> names) {
+        if (names == null || names.isEmpty()) return "MrTheAFK, lfForagingUpdate";
+        return String.join(", ", names);
+    }
+
+    private static List<String> splitNames(String value) {
+        List<String> names = new ArrayList<>();
+        for (String part : value.split(",")) {
+            String name = part.trim();
+            if (!name.isEmpty() && names.stream().noneMatch(existing -> existing.equalsIgnoreCase(name))) names.add(name);
+        }
+        if (names.isEmpty()) {
+            names.add("MrTheAFK");
+            names.add("lfForagingUpdate");
+        }
+        return names;
     }
 }
