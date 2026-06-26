@@ -1,0 +1,15 @@
+.gradle/
+build/
+run/
+
+*.class
+*.log
+*.gz
+
+.DS_Store
+.idea/
+.vscode/
+*.iml
+
+# Local Gradle wrapper generated files if added later
+.gradle-cache/

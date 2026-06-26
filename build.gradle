@@ -1,0 +1,61 @@
+plugins {
+    id 'fabric-loom' version '1.17.12'
+    id 'maven-publish'
+}
+
+version = project.mod_version
+group = project.maven_group
+
+base {
+    archivesName = project.archives_base_name
+}
+
+repositories {
+    mavenCentral()
+    maven { url = 'https://maven.fabricmc.net/' }
+    maven { url = 'https://api.modrinth.com/maven' }
+    maven { url = 'https://maven.shedaniel.me/' }
+    maven { url = 'https://maven.terraformersmc.com/releases/' }
+}
+
+loom {
+    splitEnvironmentSourceSets()
+    mods {
+        tempestbridge {
+            sourceSet sourceSets.client
+        }
+    }
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    // Minecraft 26.2 is distributed unobfuscated and Yarn is discontinued for 26.1+.
+    // The normal Loom officialMojangMappings() path expects mapping downloads that Mojang's
+    // 26.x manifest no longer exposes, so this jar is an identity Tiny mapping built from
+    // the unobfuscated client/common jars: official == intermediary == named.
+    mappings files("gradle/mappings/identity-mappings-26.2.jar")
+    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+    modImplementation "maven.modrinth:modmenu:${project.modmenu_version}"
+    modImplementation "maven.modrinth:cloth-config:${project.cloth_config_version}"
+}
+
+processResources {
+    inputs.property "version", project.version
+    filesMatching("fabric.mod.json") {
+        expand "version": inputs.properties.version
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    // Minecraft 26.2 requires Java 25; compile the mod to the same target.
+    it.options.release = 25
+}
+
+java {
+    // Minecraft 26.2 is distributed unobfuscated; Yarn is discontinued for 26.1+.
+    // Keep Java sources in Mojang official names and do not publish/remap a sources jar
+    // until Fabric Loom exposes a first-class no-remap official-mappings path for these releases.
+    sourceCompatibility = JavaVersion.VERSION_25
+    targetCompatibility = JavaVersion.VERSION_25
+}

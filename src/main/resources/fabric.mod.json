@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "id": "tempestbridge",
+  "version": "${version}",
+  "name": "TempestBridge",
+  "description": "Formats Tempest guild bridge messages client-side.",
+  "authors": ["Azael"],
+  "contact": {},
+  "license": "MIT",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "com.azael.tempestbridge.TempestBridgeClient"
+    ],
+    "modmenu": [
+      "com.azael.tempestbridge.TempestBridgeModMenu"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.19.3",
+    "minecraft": "26.2",
+    "java": ">=25",
+    "fabric-api": "*",
+    "modmenu": "*",
+    "cloth-config": "*"
+  }
+}
