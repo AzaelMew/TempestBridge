@@ -29,25 +29,27 @@ public final class TempestBridgeConfigScreen {
 
         general.addEntry(entry.startSelector(Component.literal("Message Author Color"), colors, colors[config.messageAuthorColor])
             .setDefaultValue(colors[11])
-            .setTooltip(Component.literal("Guild > Azael_Nya [DISCORD]: author name color"))
+            .setTooltip(Component.literal("§2Guild > §b§nAzael_Nya§r §e[DISCORD]§f: Underlined part changes!"))
             .setSaveConsumer(value -> config.messageAuthorColor = indexOf(colors, value))
             .build());
         general.addEntry(entry.startSelector(Component.literal("Discord Tag Color"), colors, colors[config.discordTagColor])
             .setDefaultValue(colors[14])
-            .setTooltip(Component.literal("Color of the fallback [DISCORD] tag"))
+            .setTooltip(Component.literal("§2Guild > §bAzael_Nya§r §e§n[DISCORD]§f: Underlined part changes!"))
             .setSaveConsumer(value -> config.discordTagColor = indexOf(colors, value))
             .build());
         general.addEntry(entry.startStrField(Component.literal("Ping Name"), config.pingName)
             .setDefaultValue("")
-            .setTooltip(Component.literal("Kept for parity with the ChatTriggers settings"))
+            .setTooltip(Component.literal("§2Guild > §bAzael_Nya§r §e[DISCORD§e]§f: Hi §6§n@Azael§r!"))
             .setSaveConsumer(value -> config.pingName = value)
             .build());
         general.addEntry(entry.startStrField(Component.literal("Discord Tag"), config.discordTagText)
             .setDefaultValue("DISCORD")
+            .setTooltip(Component.literal("§2Guild > §bAzael_Nya§r §e[§nDISCORD§e]§f: Underlined part changes!"))
             .setSaveConsumer(value -> config.discordTagText = value)
             .build());
         general.addEntry(entry.startSelector(Component.literal("Guild Rank Tag Color"), colors, colors[config.rankTagColor])
             .setDefaultValue(colors[6])
+            .setTooltip(Component.literal("§2Guild > §bAzael_Nya§r §6§n[Elder]§f: Message from sister guild!"))
             .setSaveConsumer(value -> config.rankTagColor = indexOf(colors, value))
             .build());
         general.addEntry(entry.startBooleanToggle(Component.literal("Show Discord Messages"), config.discordToggle)
@@ -76,27 +78,33 @@ public final class TempestBridgeConfigScreen {
             .build());
         events.addEntry(entry.startSelector(Component.literal("Skyblock Event Tag Color"), colors, colors[config.eventTagColor])
             .setDefaultValue(colors[6])
+            .setTooltip(Component.literal("§2Guild > §6§n[EVENT] §bJacob's Farming Contest (Carrot, Melon, Sugar Cane): §fStarting in 2m!"))
             .setSaveConsumer(value -> config.eventTagColor = indexOf(colors, value))
             .build());
         events.addEntry(entry.startSelector(Component.literal("Skyblock Event Text Color"), colors, colors[config.eventTextColor])
             .setDefaultValue(colors[11])
+            .setTooltip(Component.literal("§2Guild > §6[EVENT] §b§nJacob's Farming Contest (Carrot, Melon, Sugar Cane): §fStarting in 2m!"))
             .setSaveConsumer(value -> config.eventTextColor = indexOf(colors, value))
             .build());
         events.addEntry(entry.startSelector(Component.literal("Skyblock Event Time Color"), colors, colors[config.eventTimeColor])
             .setDefaultValue(colors[15])
+            .setTooltip(Component.literal("§2Guild > §6[EVENT] §bJacob's Farming Contest (Carrot, Melon, Sugar Cane): §f§nStarting in 2m!"))
             .setSaveConsumer(value -> config.eventTimeColor = indexOf(colors, value))
             .build());
 
         commands.addEntry(entry.startSelector(Component.literal("Command Symbol"), symbols, symbols[config.commandSymbol])
             .setDefaultValue(symbols[0])
+            .setTooltip(Component.literal("§b§n-§b Skyblock Level§f:§e 400"))
             .setSaveConsumer(value -> config.commandSymbol = indexOf(symbols, value))
             .build());
         commands.addEntry(entry.startSelector(Component.literal("Stat Text Color"), colors, colors[config.commandTextColor])
             .setDefaultValue(colors[11])
+            .setTooltip(Component.literal("§b- §b§nSkyblock Level§f: §e§n400"))
             .setSaveConsumer(value -> config.commandTextColor = indexOf(colors, value))
             .build());
         commands.addEntry(entry.startSelector(Component.literal("Stat Value Color"), colors, colors[config.commandValueColor])
             .setDefaultValue(colors[14])
+            .setTooltip(Component.literal("§b- Skyblock Level§f: §e§n400"))
             .setSaveConsumer(value -> config.commandValueColor = indexOf(colors, value))
             .build());
 
