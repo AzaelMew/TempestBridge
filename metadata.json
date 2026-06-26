@@ -2,7 +2,7 @@
 	"name":"TempestBridge",
 	"author": "Azael",
 	"description": "A bridge between Discord and the Tempest Guild!",
-	"helpMessage": "§6Use /tempest to change the color of the message author!",
+	"helpMessage": "§6Use /bridge to change the color of the message author!",
 	"version": "0.5.6",
 	"entry": "index.js",
 	"requires": ["Vigilance","STuFLib","ItemSharing"]

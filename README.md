@@ -32,18 +32,18 @@ It is a Fabric port of the original ChatTriggers module. External integrations f
   - SkyBlock command output symbol/text/value colors
   - optional ping-name highlight with ping sound
 - Debug logging toggle for troubleshooting live chat matching:
-  - `/tempestdebug`
+  - `/bridgedebug`
 
 ## Commands
 
 ```text
-/tempest
+/bridge
 ```
 
 Opens the TempestBridge settings screen.
 
 ```text
-/tempestdebug
+/bridgedebug
 ```
 
 Toggles debug logging. When enabled, matching details are written to `logs/latest.log`.
@@ -73,7 +73,7 @@ gradle build
 The built mod jar is produced at:
 
 ```text
-build/libs/tempestbridge-1.0.2.jar
+build/libs/tempestbridge-1.0.3.jar
 ```
 
 ## Notes on Minecraft 26.2 mappings
@@ -92,7 +92,7 @@ official == intermediary == named
 
 ## Configuration
 
-Open the settings screen with `/tempest`, or through Mod Menu.
+Open the settings screen with `/bridge`, or through Mod Menu.
 
 The most important setting for using this mod with other bridge bots is:
 

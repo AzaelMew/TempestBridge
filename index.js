@@ -285,7 +285,7 @@ function handleLinksGeneral(event) {//handles general links
 }
 
 //Settings
-register("command", () => Settings.openGUI()).setName("tempest");
+register("command", () => Settings.openGUI()).setName("bridge");
 register("command", (...args) => {
   let username = args.toString().replaceAll(","," ")
   ignores.push({
