@@ -31,10 +31,10 @@ jobs:
           fi
           echo "tag=$TAG" >> "$GITHUB_OUTPUT"
 
-      - name: Checkout Minecraft 26.2 branch
+      - name: Checkout Minecraft 26.2 release tag
         uses: actions/checkout@v4
         with:
-          ref: main
+          ref: ${{ steps.tag.outputs.tag }}
           path: mc-26.2
 
       - name: Checkout Minecraft 26.1.2 branch

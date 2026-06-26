@@ -18,7 +18,10 @@ public final class TempestBridgeConfigScreen {
         ConfigBuilder builder = ConfigBuilder.create()
             .setParentScreen(parent)
             .setTitle(Component.literal("TempestBridge"));
-        builder.setSavingRunnable(config::save);
+        builder.setSavingRunnable(() -> {
+            config.sanitize();
+            config.save();
+        });
         ConfigEntryBuilder entry = builder.entryBuilder();
         ConfigCategory general = builder.getOrCreateCategory(Component.literal("General"));
         ConfigCategory commands = builder.getOrCreateCategory(Component.literal("Commands"));
@@ -39,7 +42,7 @@ public final class TempestBridgeConfigScreen {
             .build());
         general.addEntry(entry.startStrField(Component.literal("Ping Name"), config.pingName)
             .setDefaultValue("")
-            .setTooltip(Component.literal("§2Guild > §bAzael_Nya§r §e[DISCORD§e]§f: Hi §6§n@Azael§r!"))
+            .setTooltip(Component.literal("Comma-separated names to highlight and ping on, e.g. Azael, Jyry. §2Guild > §bAzael_Nya§r §e[DISCORD§e]§f: Hi §6§n@Azael§r!"))
             .setSaveConsumer(value -> config.pingName = value)
             .build());
         general.addEntry(entry.startStrField(Component.literal("Discord Tag"), config.discordTagText)

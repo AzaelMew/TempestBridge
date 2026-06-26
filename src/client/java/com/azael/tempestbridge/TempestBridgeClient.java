@@ -13,6 +13,7 @@ import net.minecraft.sounds.SoundEvents;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -90,7 +91,7 @@ public class TempestBridgeClient implements ClientModInitializer {
                 .then(ClientCommands.argument("ign", StringArgumentType.greedyString())
                     .executes(ctx -> {
                         String ign = StringArgumentType.getString(ctx, "ign").trim();
-                        if (!ign.isEmpty() && CONFIG.ignores.stream().noneMatch(s -> s.equalsIgnoreCase(ign))) {
+                        if (!ign.isEmpty() && CONFIG.ignores.stream().noneMatch(s -> s != null && s.equalsIgnoreCase(ign))) {
                             CONFIG.ignores.add(ign);
                             CONFIG.save();
                         }
@@ -104,7 +105,7 @@ public class TempestBridgeClient implements ClientModInitializer {
                 .then(ClientCommands.argument("ign", StringArgumentType.greedyString())
                     .executes(ctx -> {
                         String ign = StringArgumentType.getString(ctx, "ign").trim();
-                        CONFIG.ignores.removeIf(s -> s.equalsIgnoreCase(ign));
+                        CONFIG.ignores.removeIf(s -> s != null && s.equalsIgnoreCase(ign));
                         CONFIG.save();
                         chat("§2Guild > §cUn-Ignored " + color(CONFIG.messageAuthorColor) + ign);
                         return 1;
@@ -213,7 +214,7 @@ public class TempestBridgeClient implements ClientModInitializer {
     }
 
     private static String handleStatcheck(String msg, String account) {
-        ding();
+        if (CONFIG.shouldEventPing) ding();
         return msg.replace("Officer > " + account + ": ", color(CONFIG.commandTextColor))
             .replace("[STATCHECK]", color(CONFIG.eventTagColor) + "[STATCHECK]" + color(CONFIG.eventTextColor))
             .replace(". SB", ".\n" + color(CONFIG.eventTextColor) + "SB")
@@ -226,14 +227,38 @@ public class TempestBridgeClient implements ClientModInitializer {
         Matcher joinLeave = GUILD_JOIN_LEAVE.matcher(msg);
         if (joinLeave.find()) msg = joinLeave.replaceAll("$1$2§e$3");
         msg = applyTag(msg);
-        return StufUrlCodec.decodeWords(msg);
+        return applyPingHighlight(StufUrlCodec.decodeWords(msg));
     }
 
     private static String handleOfficer(String msg, String account) {
         if (!CONFIG.discordToggle) return "";
         msg = msg.replace("Officer > " + account + ":", "§3Staff >" + color(CONFIG.messageAuthorColor));
         msg = applyTag(msg);
-        return StufUrlCodec.decodeWords(msg);
+        return applyPingHighlight(StufUrlCodec.decodeWords(msg));
+    }
+
+    private static String applyPingHighlight(String msg) {
+        if (CONFIG.pingName == null || CONFIG.pingName.trim().isEmpty()) return msg;
+
+        String highlighted = msg;
+        boolean matched = false;
+        for (String rawName : CONFIG.pingName.split(",")) {
+            String name = rawName.trim();
+            if (name.isEmpty()) continue;
+
+            String prefix = name.startsWith("@") ? "" : "@?";
+            Pattern pattern = Pattern.compile("(?i)(?<![A-Za-z0-9_])(" + prefix + Pattern.quote(name) + ")(?![A-Za-z0-9_])");
+            Matcher matcher = pattern.matcher(highlighted);
+            StringBuffer out = new StringBuffer();
+            while (matcher.find()) {
+                matched = true;
+                matcher.appendReplacement(out, Matcher.quoteReplacement("§6§n" + matcher.group(1) + "§r"));
+            }
+            matcher.appendTail(out);
+            highlighted = out.toString();
+        }
+        if (matched) ding();
+        return highlighted;
     }
 
     private static String applyTag(String msg) {
@@ -293,9 +318,13 @@ public class TempestBridgeClient implements ClientModInitializer {
     }
 
     private static boolean isIgnored(String msg, String account) {
+        String lowerMsg = msg.toLowerCase(Locale.ROOT);
+        String lowerAccount = account.toLowerCase(Locale.ROOT);
         for (String ign : CONFIG.ignores) {
-            if (msg.contains("Guild > " + account + ": " + ign + ":")) return true;
-            if (Pattern.compile("^Guild > " + Pattern.quote(account) + ": " + Pattern.quote(ign) + " \\[[A-Za-z]{1,16}\\]:", Pattern.MULTILINE).matcher(msg).find()) return true;
+            if (ign == null) continue;
+            String lowerIgn = ign.toLowerCase(Locale.ROOT);
+            if (lowerMsg.contains("guild > " + lowerAccount + ": " + lowerIgn + ":")) return true;
+            if (Pattern.compile("^guild > " + Pattern.quote(lowerAccount) + ": " + Pattern.quote(lowerIgn) + " \\[a-z]{1,16}\\]:", Pattern.MULTILINE).matcher(lowerMsg).find()) return true;
         }
         return false;
     }
@@ -308,6 +337,7 @@ public class TempestBridgeClient implements ClientModInitializer {
         String username = matcher.group(2);
         if (CONFIG.bridgeAccounts == null) return null;
         for (String configured : CONFIG.bridgeAccounts) {
+            if (configured == null) continue;
             if (username.equalsIgnoreCase(normalizeConfiguredUsername(configured))) return account;
         }
         return null;
