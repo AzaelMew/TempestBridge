@@ -78,7 +78,7 @@ public class TempestBridgeClient implements ClientModInitializer {
 
     private void registerCommands() {
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> dispatcher.register(
-            ClientCommandManager.literal("tempest")
+            ClientCommandManager.literal("bridge")
                 .executes(ctx -> {
                     Minecraft client = Minecraft.getInstance();
                     client.execute(() -> client.setScreen(TempestBridgeConfigScreen.create(client.screen)));
@@ -113,12 +113,12 @@ public class TempestBridgeClient implements ClientModInitializer {
         ));
 
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> dispatcher.register(
-            ClientCommandManager.literal("tempestdebug")
+            ClientCommandManager.literal("bridgedebug")
                 .executes(ctx -> {
                     CONFIG.debugLogging = !CONFIG.debugLogging;
                     CONFIG.save();
                     chat("§2Guild > §aTempestBridge debug logging " + (CONFIG.debugLogging ? "enabled" : "disabled") + "§a. Check logs/latest.log");
-                    LOGGER.info("TempestBridge debug logging {} by /tempestdebug", CONFIG.debugLogging ? "enabled" : "disabled");
+                    LOGGER.info("TempestBridge debug logging {} by /bridgedebug", CONFIG.debugLogging ? "enabled" : "disabled");
                     return 1;
                 })
         ));
