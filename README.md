@@ -30,7 +30,7 @@ It is a Fabric port of the original ChatTriggers module. External integrations f
   - guild-rank tag color
   - SkyBlock event/stat colors
   - SkyBlock command output symbol/text/value colors
-  - optional ping-name highlight
+  - optional ping-name highlight with ping sound
 - Debug logging toggle for troubleshooting live chat matching:
   - `/tempestdebug`
 
@@ -73,7 +73,7 @@ gradle build
 The built mod jar is produced at:
 
 ```text
-build/libs/tempestbridge-1.0.0.jar
+build/libs/tempestbridge-1.0.1.jar
 ```
 
 ## Notes on Minecraft 26.1.2 mappings
@@ -92,7 +92,7 @@ official == intermediary == named
 
 ## Configuration
 
-Open the settings screen with `/tempest`, or through Mod Menu if it is installed.
+Open the settings screen with `/tempest`, or through Mod Menu.
 
 The most important setting for using this mod with other bridge bots is:
 
@@ -108,7 +108,7 @@ MrTheAFK, lfForagingUpdate, SomeOtherBridgeBot
 
 When a chat line is sent by one of these accounts, TempestBridge will apply the same bridge formatting/parsing rules to it. This lets the mod work with renamed/replaced bridge bot accounts without rebuilding the mod.
 
-The settings screen also lets you change the visible bridge formatting, including the displayed bridge tag text (`DISCORD` by default), tag colors, author colors, guild-rank tag colors, event colors, command output colors, and the optional ping-name highlight.
+The settings screen also lets you change the visible bridge formatting, including the displayed bridge tag text (`DISCORD` by default), tag colors, author colors, guild-rank tag colors, event colors, command output colors, and the optional ping-name highlight. `Ping Name` accepts a comma-separated list, highlights matching names in bridge chat, and plays the same ping sound used by event notifications.
 
 The config is saved as:
 

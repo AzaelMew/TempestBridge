@@ -39,8 +39,7 @@ public class TempestBridgeConfig {
             try (Reader reader = Files.newBufferedReader(CONFIG_PATH)) {
                 TempestBridgeConfig config = GSON.fromJson(reader, TempestBridgeConfig.class);
                 if (config != null) {
-                    if (config.bridgeAccounts == null || config.bridgeAccounts.isEmpty()) config.bridgeAccounts = new ArrayList<>(List.of("MrTheAFK", "lfForagingUpdate"));
-                    if (config.ignores == null) config.ignores = new ArrayList<>();
+                    config.sanitize();
                     return config;
                 }
             } catch (Exception e) {
@@ -61,5 +60,39 @@ public class TempestBridgeConfig {
         } catch (IOException e) {
             TempestBridgeClient.LOGGER.warn("Failed to save TempestBridge config", e);
         }
+    }
+
+    void sanitize() {
+        messageAuthorColor = clamp(messageAuthorColor, 0, TempestBridgeClient.COLORS.length - 1);
+        discordTagColor = clamp(discordTagColor, 0, TempestBridgeClient.COLORS.length - 1);
+        rankTagColor = clamp(rankTagColor, 0, TempestBridgeClient.COLORS.length - 1);
+        eventTagColor = clamp(eventTagColor, 0, TempestBridgeClient.COLORS.length - 1);
+        eventTextColor = clamp(eventTextColor, 0, TempestBridgeClient.COLORS.length - 1);
+        eventTimeColor = clamp(eventTimeColor, 0, TempestBridgeClient.COLORS.length - 1);
+        commandTextColor = clamp(commandTextColor, 0, TempestBridgeClient.COLORS.length - 1);
+        commandValueColor = clamp(commandValueColor, 0, TempestBridgeClient.COLORS.length - 1);
+        commandSymbol = clamp(commandSymbol, 0, TempestBridgeClient.SYMBOLS.length - 1);
+
+        if (pingName == null) pingName = "";
+        if (discordTagText == null || discordTagText.isBlank()) discordTagText = "DISCORD";
+        bridgeAccounts = cleanNames(bridgeAccounts, true);
+        ignores = cleanNames(ignores, false);
+    }
+
+    private static List<String> cleanNames(List<String> names, boolean defaultBridgeAccounts) {
+        List<String> cleaned = new ArrayList<>();
+        if (names != null) {
+            for (String name : names) {
+                if (name == null) continue;
+                String trimmed = name.trim();
+                if (!trimmed.isEmpty() && cleaned.stream().noneMatch(existing -> existing.equalsIgnoreCase(trimmed))) cleaned.add(trimmed);
+            }
+        }
+        if (cleaned.isEmpty() && defaultBridgeAccounts) cleaned.addAll(List.of("MrTheAFK", "lfForagingUpdate"));
+        return cleaned;
+    }
+
+    private static int clamp(int value, int min, int max) {
+        return Math.max(min, Math.min(max, value));
     }
 }
