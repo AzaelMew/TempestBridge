@@ -31,6 +31,7 @@ public class TempestBridgeConfig {
     public int commandTextColor = 11;
     public int commandValueColor = 14;
     public boolean debugLogging = false;
+    public List<String> bridgeAccounts = new ArrayList<>(List.of("MrTheAFK", "lfForagingUpdate"));
     public List<String> ignores = new ArrayList<>();
 
     public static TempestBridgeConfig load() {
@@ -38,6 +39,7 @@ public class TempestBridgeConfig {
             try (Reader reader = Files.newBufferedReader(CONFIG_PATH)) {
                 TempestBridgeConfig config = GSON.fromJson(reader, TempestBridgeConfig.class);
                 if (config != null) {
+                    if (config.bridgeAccounts == null || config.bridgeAccounts.isEmpty()) config.bridgeAccounts = new ArrayList<>(List.of("MrTheAFK", "lfForagingUpdate"));
                     if (config.ignores == null) config.ignores = new ArrayList<>();
                     return config;
                 }
